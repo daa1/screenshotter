@@ -1,0 +1,1 @@
+A simple project to grab snapshots of a webpage and save it as a .png
