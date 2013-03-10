@@ -1,0 +1,33 @@
+h1= title
+form(action='#', method='post', class='webpages')
+  fieldset
+    .url-container
+      .control-group
+        label Url
+        .controls
+          input(type='text', name='pageUrl', class='webpage')
+          i.icon-plus-sign
+    br
+    input(type='submit', value='Submit', class='btn')
+script
+  $('.webpages').submit(function(e){
+    e.preventDefault();
+    var pages = [];
+    $(this).find('.webpage').each(function(){
+      pages.push({"pageUrl": $(this).val(), "imageName": $(this).val().replace('.', '-').substr(7)+'.png'})
+    });
+    console.log(pages)
+    $.ajax({
+      url: "/start",
+      type: "POST",
+      data: JSON.stringify(pages),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function(result) {
+        console.log(result);
+      }
+    })    
+  });
+  $('.webpages').on('click', '.icon-plus-sign', function(){
+    $(this).closest('.control-group').clone().appendTo('.webpages .url-container')
+  });
