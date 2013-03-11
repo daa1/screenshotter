@@ -1,0 +1,5 @@
+h1= title
+ul
+  each webshot in webshots
+    li
+      a(href='https://s3.amazonaws.com/screenshotter-bucket/'+webshot.fileName) #{webshot.fileName} #{' - https://s3.amazonaws.com/screenshotter-bucket/'+webshot.fileName}

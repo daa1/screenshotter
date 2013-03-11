@@ -14,7 +14,7 @@ script
     e.preventDefault();
     var pages = [];
     $(this).find('.webpage').each(function(){
-      pages.push({"pageUrl": $(this).val(), "imageName": $(this).val().replace('.', '-').substr(7)+'.png'})
+      pages.push({"pageUrl": $(this).val(), "imageName": $(this).val().replace(/\//g, '-').replace('.', '-')+'.jpg'})
     });
     console.log(pages)
     $.ajax({

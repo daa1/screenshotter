@@ -43,7 +43,7 @@ app.get('/form', function (req, res) {
   res.render('form', { title: 'Form' })
 }); 
 
-app.get('/test', function(req, res) {
+app.get('/test', function (req, res) {
   fs.readFile('./request.html', function(error, content) {
   	if(error) {
   		res.writeHead(500);
@@ -56,20 +56,19 @@ app.get('/test', function(req, res) {
   });
 });
 
-app.get('/list', function(req, res) {
-  var keyCollection = [];
-  var s3 = new AWS.S3();
-  s3.client.listObjects({ Bucket : 'screenshotter-bucket' }, function(err, data){
-    if (err) throw err;
-    for(c in data.Contents) {
-      console.log(data.Contents[c].Key);
-      keyCollection.push({"fileName": data.Contents[c].Key});
-    }
-    res.json(keyCollection);
-  }); 
+app.get('/list', function (req, res) {
+  S3GetFileList(function (returnValue) {
+    res.render('list', { title: 'Webshots list', webshots: returnValue })
+  });
+});
+
+app.get('/json/list', function (req, res) {
+  S3GetFileList(function (returnValue) {
+    res.json(returnValue);
+  });
 })
 
-app.post('/start', function(req, res) {
+app.post('/start', function (req, res) {
   var queryData = req.body;
   for(q in queryData) {
     var screenToShoot = queryData[q];
@@ -80,7 +79,21 @@ app.post('/start', function(req, res) {
   res.json(req.body);
 });
 
-var startScreenshotProcess = function(urlToGrab, imageName) {
+var S3GetFileList = function (callback) {
+  var keyCollection = [];
+  var s3 = new AWS.S3();
+  s3.client.listObjects({ Bucket : 'screenshotter-bucket' }, function (err, data){
+    if (err) throw err;
+    for(c in data.Contents) {
+      console.log(data.Contents[c].Key);
+      keyCollection.push({"fileName": data.Contents[c].Key});
+    }
+    console.log(data);
+    callback(keyCollection);
+  });
+}
+
+var startScreenshotProcess = function (urlToGrab, imageName) {
   if(imageName !== undefined && urlToGrab !== undefined) {
     console.log("url to grab: " + urlToGrab + " image name: " + imageName);
     screenshotter = spawn('phantomjs', ['./lib/screenshotter.js', urlToGrab, 'images/'+imageName]);
