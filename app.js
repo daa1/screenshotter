@@ -6,24 +6,31 @@
 var express = require('express')
   , fs = require('fs')
   , spawn = require('child_process').spawn
-  , AWS = require('aws-sdk');
+  , AWS = require('aws-sdk')
+  , http = require('http')
+  , path = require('path');
 
 
 AWS.config.loadFromPath('./config.json');
 // Set region for future requests.
 AWS.config.update({region: 'us-east-1'});
-
-var app = module.exports = express.createServer();
+  
+var app = express();
+var server = http.createServer(app);
+//var app = module.exports = express.createServer();
 
 // Configuration
 
 app.configure(function(){
+  app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function(){
@@ -64,7 +71,7 @@ app.get('/list', function (req, res) {
 
 app.get('/json/list', function (req, res) {
   S3GetFileList(function (returnValue) {
-    res.json(returnValue);
+    res.jsonp(returnValue);
   });
 })
 
@@ -128,5 +135,5 @@ var uplooadToS3 = function(imageName) {
   });
 }
 
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+server.listen(3000);
+console.log("Express server listening on port %d", server.address().port);
