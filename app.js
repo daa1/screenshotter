@@ -149,5 +149,5 @@ var uplooadToS3 = function(imageName) {
   });
 }
 
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
 //console.log("Express server listening on port %d", server.address().port);
