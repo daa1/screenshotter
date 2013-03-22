@@ -17,7 +17,6 @@ AWS.config.update({region: 'us-east-1'});
   
 var app = express();
 var server = http.createServer(app);
-//var app = module.exports = express.createServer();
 
 // Configuration
 
@@ -47,6 +46,7 @@ app.get('/', function (req, res){
 });
 
 app.get('/form', function (req, res) {
+  console.log(req.params);
   res.render('form', { title: 'Form' })
 }); 
 
@@ -73,18 +73,34 @@ app.get('/json/list', function (req, res) {
   S3GetFileList(function (returnValue) {
     res.jsonp(returnValue);
   });
-})
+});
 
 app.post('/start', function (req, res) {
   var queryData = req.body;
   for(q in queryData) {
     var screenToShoot = queryData[q];
     console.log(screenToShoot);
-
     startScreenshotProcess(screenToShoot.pageUrl, screenToShoot.imageName)
   }
   res.json(req.body);
 });
+
+app.post('/delete', function (req, res) {
+  var key = req.query.key;
+  console.log(key);
+  S3DeleteFile(key, function (returnValue) {
+    res.jsonp(returnValue);
+  });
+});
+
+var S3DeleteFile = function (key, callback) {
+  var s3 = new AWS.S3();
+  console.log(key);
+  s3.client.deleteObject({ Bucket : 'screenshotter-bucket', Key : key }, function (err, data){
+      if (err) throw err;
+      callback({"Delete": key});
+  });
+}
 
 var S3GetFileList = function (callback) {
   var keyCollection = [];
@@ -92,10 +108,10 @@ var S3GetFileList = function (callback) {
   s3.client.listObjects({ Bucket : 'screenshotter-bucket' }, function (err, data){
     if (err) throw err;
     for(c in data.Contents) {
-      console.log(data.Contents[c].Key);
+      //console.log(data.Contents[c].Key);
       keyCollection.push({"fileName": data.Contents[c].Key});
     }
-    console.log(data);
+    //console.log(data);
     callback(keyCollection);
   });
 }
@@ -103,7 +119,7 @@ var S3GetFileList = function (callback) {
 var startScreenshotProcess = function (urlToGrab, imageName) {
   if(imageName !== undefined && urlToGrab !== undefined) {
     console.log("url to grab: " + urlToGrab + " image name: " + imageName);
-    screenshotter = spawn('phantomjs', ['./lib/screenshotter.js', urlToGrab, 'images/'+imageName]);
+    screenshotter = spawn('./node_modules/phantomjs/bin/phantomjs', ['./lib/screenshotter.js', urlToGrab, 'images/'+imageName]);
 
     screenshotter.stdout.on('data', function (data) {
       console.log('stdout: ' + data);

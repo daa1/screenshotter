@@ -5,5 +5,7 @@
   , "dependencies": {
       "express": ">= 3.x"
     , "jade": ">= 0.0.1"
+    , "aws-sdk": ">= 0.0.1"
+    , "phantomjs": ">= 0.0.1"
   }
 }
