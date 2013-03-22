@@ -11,7 +11,7 @@ var express = require('express')
   , path = require('path');
 
 
-AWS.config.update({accessKeyId: process.env.S3_KEY, secretAccessKey: process.env.S3_SECRET, region: 'us-east-1'});
+AWS.config.update({accessKeyId: process.env.S3_KEY, secretAccessKey: process.env.S3_SECRET, region: process.env.S3_REGION});
 
 var app = express();
 var server = http.createServer(app);
