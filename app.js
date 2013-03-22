@@ -150,4 +150,4 @@ var uplooadToS3 = function(imageName) {
 }
 
 server.listen(3000);
-console.log("Express server listening on port %d", server.address().port);
+//console.log("Express server listening on port %d", server.address().port);
