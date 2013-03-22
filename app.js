@@ -94,7 +94,7 @@ app.post('/delete', function (req, res) {
 var S3DeleteFile = function (key, callback) {
   var s3 = new AWS.S3();
   console.log(key);
-  s3.client.deleteObject({ Bucket : 'screenshotter-bucket', Key : key }, function (err, data){
+  s3.client.deleteObject({ Bucket : process.env.S3_BUCKET, Key : key }, function (err, data){
       if (err) throw err;
       callback({"Delete": key});
   });
@@ -103,7 +103,7 @@ var S3DeleteFile = function (key, callback) {
 var S3GetFileList = function (callback) {
   var keyCollection = [];
   var s3 = new AWS.S3();
-  s3.client.listObjects({ Bucket : 'screenshotter-bucket' }, function (err, data){
+  s3.client.listObjects({ Bucket : process.env.S3_BUCKET }, function (err, data){
     if (err) throw err;
     for(c in data.Contents) {
       //console.log(data.Contents[c].Key);
@@ -136,7 +136,7 @@ var startScreenshotProcess = function (urlToGrab, imageName) {
 
 var uplooadToS3 = function(imageName) {
   fs.readFile('images/'+imageName, function (err, data) {
-    var params = {Bucket: 'screenshotter-bucket', Key: imageName, Body: data};
+    var params = {Bucket: process.env.S3_BUCKET, Key: imageName, Body: data};
     var s3 = new AWS.S3();
     s3.client.putObject(params, function(err, data) {
       if (err) {
@@ -150,4 +150,4 @@ var uplooadToS3 = function(imageName) {
 }
 
 server.listen(process.env.PORT || 3000);
-//console.log("Express server listening on port %d", server.address().port);
+console.log("Express server listening on port %d", server.address().port);
