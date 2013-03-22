@@ -2,6 +2,10 @@
     "name": "application-name"
   , "version": "0.0.1"
   , "private": true
+  , "engines": {
+  	"node": ">= 0.0.1",
+  	"npm": ">= 0.0.1"
+  }
   , "dependencies": {
       "express": ">= 3.x"
     , "jade": ">= 0.0.1"
