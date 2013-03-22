@@ -11,10 +11,8 @@ var express = require('express')
   , path = require('path');
 
 
-AWS.config.loadFromPath('./config.json');
-// Set region for future requests.
-AWS.config.update({region: 'us-east-1'});
-  
+AWS.config.update({accessKeyId: ENV['S3_KEY'], secretAccessKey: ENV['S3_SECRET'], region: 'us-east-1'});
+
 var app = express();
 var server = http.createServer(app);
 
