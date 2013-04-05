@@ -1,0 +1,22 @@
+!!!
+html
+  head
+    meta(charset='utf-8')
+    title= title
+    meta(name='description', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/stylesheets/impress-demo.css')
+    link(rel='stylesheet', href='/stylesheets/impress-progress.css')
+    link(rel='stylesheet', href='/stylesheets/impress-style.css')
+    script(src='/javascripts/impress-progress.js')
+    script(src='/javascripts/impress.js')
+    script(type='text/javascript')
+        impress().init();
+  body
+  .progressbar
+        div
+  .progress
+  #impress
+    each webshot, i in webshots
+        .step.slide.event(id='webshot'+i,data-scale=20-i,data-x=650*i,data-y=1000*i,style='z-index:'+(20-i))
+            .event-header
+                img(src='href='https://s3.amazonaws.com/'+process.env.S3_BUCKET +'/'+webshot.fileName)

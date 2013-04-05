@@ -9,7 +9,7 @@ block content
           a.accordion-toggle(data-toggle='collapse', data-parent='#webshots', href='#webshot'+i) #{webshot.fileName}
         .accordion-body.collapse(id='webshot'+i)
           .accordion-inner
-            a(href='https://s3.amazonaws.com/screenshotter-bucket/'+webshot.fileName)
+            a(href='https://s3.amazonaws.com/'+process.env.S3_BUCKET +'/'+webshot.fileName)
               i.icon-download
               | - Download
             span(data-key=webshot.fileName)

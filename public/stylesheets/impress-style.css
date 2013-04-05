@@ -1,0 +1,14 @@
+.event-header{
+    background-color: blue;
+    width:100%;
+    height:100px;
+    overflow: auto;
+    moz-border-radius: 25px 10px / 10px 25px;
+    border-radius: 25px 10px / 10px 25px;
+    color:white;
+    padding:10px;
+}
+
+.event.past{
+    opacity: 0;
+}
